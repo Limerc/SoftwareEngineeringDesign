@@ -1,46 +1,26 @@
 #[macro_use] extern crate rocket;
 
-use rocket::serde::{Deserialize, Serialize, json::Json};
-use std::process::Command;
+mod routes;
+mod db;
 
-#[derive(Deserialize)]
-struct CodeInput {
-    code: String,
-}
+use rocket_db_pools::Database;
+use routes::{auth, problems, judge};
+use db::Db;
 
-#[derive(Serialize)]
-struct CodeOutput {
-    stdout: String,
-    stderr: String,
-}
+use rocket::response::Redirect;
 
-#[post("/run", format = "json", data = "<input>")]
-fn run_code(input: Json<CodeInput>) -> Json<CodeOutput> {
-    // 将用户代码写入临时文件
-    std::fs::write("/tmp/user_code.rs", &input.code).expect("Failed to write code to file");
-
-    // 使用 Docker 运行用户代码
-    let output = Command::new("docker")
-        .arg("run")
-        .arg("--rm") // 容器运行结束后自动删除
-        .arg("-v") // 挂载用户代码到容器
-        .arg("/tmp/user_code.rs:/user_code.rs")
-        .arg("rust:latest") // 使用官方 Rust 镜像
-        .arg("sh")
-        .arg("-c")
-        .arg("rustc /user_code.rs && ./user_code")
-        .output()
-        .expect("Failed to execute code in Docker");
-
-    Json(CodeOutput {
-        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
-        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
-    })
+#[get("/")]
+fn index() -> Redirect {
+    Redirect::to(uri!("/static/index.html"))
 }
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![run_code])
-        .mount("/", rocket::fs::FileServer::from("static"))
+        .attach(Db::init()) // 挂载数据库连接池
+        .mount("/auth", routes![auth::register, auth::login]) // 用户注册和登录
+        .mount("/problems", routes![problems::get_problems, problems::get_problem_details]) // 题目管理
+        .mount("/judge", routes![judge::submit_code]) // 判题功能
+        .mount("/static", rocket::fs::FileServer::from("static")) // 提供静态文件服务
+        .mount("/", routes![index]) // 添加根路径路由
 }
