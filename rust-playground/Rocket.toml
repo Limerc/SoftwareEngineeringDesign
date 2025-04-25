@@ -1,0 +1,6 @@
+[default]
+address = "x.x.x.x"
+port = 8002
+
+[default.databases.mysql_database]
+url = "mysql://<数据库管理员名>:<密码>@127.0.0.1/<数据库名>"
