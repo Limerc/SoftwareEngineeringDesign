@@ -1,5 +1,7 @@
 ﻿use reqwest::header;
 use reqwest::header::HeaderMap;
+use rocket::form::validate::Contains;
+use rocket::futures::StreamExt;
 use serde::{Serialize, Deserialize};
 use serde_json::{json, from_value, from_str};
 
@@ -50,6 +52,7 @@ pub struct QueryTable {
     pub model: String,
     pub messages: Vec<Message>,
     pub stream:bool,
+    pub include_usage:bool,
     pub response_type:ResponseType,
 }
 
@@ -61,6 +64,7 @@ impl Default for QueryTable{
             model:String::from("deepseek-chat"),
             messages:vec![],
             stream:false,
+            include_usage:true,
             response_type:ResponseType::Text,
         }
     }
@@ -94,11 +98,12 @@ struct PostResponseFormat{
 
 #[derive(Serialize, Deserialize)]
 #[derive(Debug)]
-struct PostData{
+pub struct PostData{
     model: String,
     messages: Vec<PostMessage>,
     response_format:PostResponseFormat,
     stream:bool,
+    include_usage:bool
 }
 
 impl PostData{
@@ -114,12 +119,13 @@ impl PostData{
                 ResponseType::Text => PostResponseFormat{r#type:"text".to_string()},
                 ResponseType::JsonObject => PostResponseFormat{r#type:"json_object".to_string()},
             },
-            stream:query_table.stream
+            stream:query_table.stream,
+            include_usage:query_table.include_usage
         }
     }
 }
 
-fn GetHeader(query_table: &QueryTable) ->HeaderMap{
+pub fn GetHeader(query_table: &QueryTable) ->HeaderMap{
     // 获取请求头
     let mut headers = header::HeaderMap::new();
     headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_str("application/json").unwrap());
@@ -147,4 +153,30 @@ pub async fn LLMAsk(messages: Vec<Message>, query_table: Option<QueryTable>) -> 
     let messages = binding.str();
     let messages:PostMessage = from_str(messages).unwrap();
     messages
+}
+
+#[tokio::main]
+pub async fn LLMAskStream(messages: Vec<Message>, query_table: Option<QueryTable>) {
+    // 调用LLM得到回复，非流式调用
+    let mut query_table = query_table.unwrap_or_default();
+    query_table.messages = messages;
+    let client = reqwest::Client::new();
+    let response = client.post(query_table.curl.as_str())
+        .headers(GetHeader(&query_table))
+        .json(&PostData::from(&query_table))
+        .send()
+        .await;
+    
+    let mut stream = response.unwrap().bytes_stream();
+
+    // 逐块处理数据 
+    while let Some(chunk) = stream.next().await  {
+        let chunk = chunk.unwrap();
+        let string = std::str::from_utf8(&chunk).unwrap();
+        if !string.contains("data: [DONE]"){
+            let parts: Vec<&str> = string.split("data: ").collect();
+            parts.iter().for_each(|part|{println!("{}",gjson::get(part, "choices.0.delta.content"));});
+            // println!("{}", gjson::get(string, ""))
+        }
+    }
 }
