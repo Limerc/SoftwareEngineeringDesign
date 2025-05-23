@@ -1,4 +1,13 @@
-# SoftwareEngineeringDesign
-软件工程大作业
-2025.4.24 fork test
+- 本分支任务： 
+    - blog发布与提问交流(评论区)
+    - 视频学习
+    - ~~软件说明书~~
+
+
+
+
+
+
+
+
 
