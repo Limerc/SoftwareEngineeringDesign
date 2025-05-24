@@ -1,6 +1,0 @@
-[default]
-address = "x.x.x.x"
-port = 8000
-
-[default.databases.mysql_database]
-url = "mysql://joe:<数据库密码>@127.0.0.1/learn_rocket"

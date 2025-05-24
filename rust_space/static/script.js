@@ -1,5 +1,5 @@
 // 设置 API 地址
-const API_BASE = "http://x.x.x.x:8000"; // 后端 URL
+const API_BASE = "http://139.59.103.151:8000"; // 后端 URL
 
 let editor;
 

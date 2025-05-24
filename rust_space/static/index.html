@@ -55,7 +55,7 @@
     <pre id="result"></pre>
     </div>
     <script>
-        const API_BASE = "http://x.x.x.x:8000"; // 后端 URL
+        const API_BASE = window.location.origin; // 后端 URL可以自动指向跑后端服务的ip
 
         // 初始化页面
         window.addEventListener("DOMContentLoaded", () => {
