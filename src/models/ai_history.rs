@@ -1,4 +1,4 @@
-﻿use sea_orm::entity::prelude::*;
+use sea_orm::entity::prelude::*;
 use sea_orm::{Database, QueryOrder, QuerySelect, Set};
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "ai_history")]
@@ -21,7 +21,8 @@ pub async fn insert_ai_history(
     question: String,
     response: String,
 ) -> Result<(), DbErr> {
-    let db = Database::connect("mysql://root:123456@localhost:3306/program").await?;
+    let db =
+        Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
     let new_record = ActiveModel {
         user_id: Set(user_id),
         question: Set(question),
@@ -37,7 +38,8 @@ pub async fn insert_ai_history(
 
 pub async fn get_ai_history(user_id: i32, page: u32, per_page: u32) -> Result<Vec<Model>, DbErr> {
     let offset = ((page - 1) * per_page) as u64;
-    let db = Database::connect("mysql://root:123456@localhost:3306/program").await?;
+    let db =
+        Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
 
     Entity::find()
         .filter(Column::UserId.eq(user_id)) // 过滤指定用户
