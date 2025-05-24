@@ -1,6 +1,6 @@
-﻿use rocket::State;
+use rocket::State;
+use rocket::get;
 use rocket::response::stream::{Event, EventStream};
-use rocket::{get};
 #[get("/events")]
 pub fn events(ctxt: &State<bool>) -> EventStream![Event + '_] {
     EventStream! {
