@@ -1,13 +1,13 @@
-﻿use reqwest::{header, Client};
-use rocket::serde::{Deserialize, json::Json, Serialize};
-use rocket::{post};
+use crate::llm::query::{Message, PostMessage, ResponseType};
+use crate::models::ai_history::insert_ai_history;
+use crate::models::tokenlist::get_token;
+use crate::routes::jwt::JWTGuard;
 use futures::{Stream, StreamExt};
 use reqwest::header::HeaderMap;
+use reqwest::{Client, header};
+use rocket::post;
 use rocket::response::stream::TextStream;
-use crate::llm::query::{Message, PostMessage, ResponseType};
-use crate::routes::jwt::JWTGuard;
-use crate::models::tokenlist::get_token;
-use crate::models::ai_history::insert_ai_history;
+use rocket::serde::{Deserialize, Serialize, json::Json};
 #[derive(Debug, Deserialize)]
 pub struct CodeRequest {
     code: Option<String>,

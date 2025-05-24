@@ -1,14 +1,14 @@
-﻿use rocket::serde::{Deserialize, Serialize};
 use chrono::Utc;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
-use rocket::{get, post};
-use rocket::request::{FromRequest, Request, Outcome};
 use rocket::http::Status;
+use rocket::request::{FromRequest, Outcome, Request};
+use rocket::serde::{Deserialize, Serialize};
+use rocket::{get, post};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub user_id: i32, // 用户ID
-    exp: usize,   // 过期时间
+    exp: usize,       // 过期时间
 } // token 格式
 
 const SECRET: &str = "your-secret-key";
@@ -30,7 +30,7 @@ fn generate_token(user_id: i32) -> String {
         &claims,
         &EncodingKey::from_secret(SECRET.as_bytes()),
     )
-        .unwrap()
+    .unwrap()
 }
 
 // 验证 JWT

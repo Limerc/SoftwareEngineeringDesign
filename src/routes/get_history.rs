@@ -1,9 +1,9 @@
-﻿use rocket::serde::{Deserialize, Serialize};
-use sea_orm::prelude::DateTimeWithTimeZone;
-use rocket::get;
-use crate::routes::jwt::JWTGuard;
-use rocket::serde::json::Json;
 use crate::models::ai_history::get_ai_history;
+use crate::routes::jwt::JWTGuard;
+use rocket::get;
+use rocket::serde::json::Json;
+use rocket::serde::{Deserialize, Serialize};
+use sea_orm::prelude::DateTimeWithTimeZone;
 #[derive(Debug, Deserialize)]
 struct AskHistory {
     page: u32,

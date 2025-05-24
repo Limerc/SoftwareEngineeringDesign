@@ -1,4 +1,4 @@
-﻿use sea_orm::entity::prelude::*;
+use sea_orm::entity::prelude::*;
 use sea_orm::{Database, DbErr, EntityTrait, Set, sea_query::OnConflict};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
@@ -15,20 +15,21 @@ pub enum Relation {}
 impl ActiveModelBehavior for ActiveModel {}
 
 pub async fn set_token(user_id: i32, token: String) -> Result<(), DbErr> {
-    let db = Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
+    let db =
+        Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
 
     // 正确调用方式：通过Entity执行插入
     let result = Entity::insert(ActiveModel {
         user_id: Set(user_id),
         token: Set(token.clone()),
     })
-        .on_conflict(
-            OnConflict::column(Column::UserId)
-                .update_column(Column::Token)
-                .to_owned(),
-        )
-        .exec(&db)
-        .await;
+    .on_conflict(
+        OnConflict::column(Column::UserId)
+            .update_column(Column::Token)
+            .to_owned(),
+    )
+    .exec(&db)
+    .await;
     match result {
         Ok(_) => Ok(()),
         Err(DbErr::RecordNotInserted) => Ok(()), // 忽略此错误
@@ -37,7 +38,8 @@ pub async fn set_token(user_id: i32, token: String) -> Result<(), DbErr> {
 }
 
 pub async fn get_token(user_id: i32) -> Result<Option<String>, DbErr> {
-    let db = Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
+    let db =
+        Database::connect("mysql://cooperator:test12345@l8.134.162.177:3306/learn_rocket").await?;
 
     // 通过主键查询记录
     let token_record = Entity::find_by_id(user_id).one(&db).await?;

@@ -1,8 +1,8 @@
-﻿use rocket::put;
-use rocket::serde::Deserialize;
-use rocket::serde::json::Json;
 use crate::models::tokenlist::set_token;
 use crate::routes::jwt::JWTGuard;
+use rocket::put;
+use rocket::serde::Deserialize;
+use rocket::serde::json::Json;
 #[derive(Debug, Deserialize)]
 struct Token {
     pub token: String,

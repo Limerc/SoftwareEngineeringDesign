@@ -1,6 +1,6 @@
-use proj::routes::jwt::*;
 use proj::routes::askllm::*;
 use proj::routes::get_history::*;
+use proj::routes::jwt::*;
 use proj::routes::set_token::*;
 use rocket::{launch, routes};
 
