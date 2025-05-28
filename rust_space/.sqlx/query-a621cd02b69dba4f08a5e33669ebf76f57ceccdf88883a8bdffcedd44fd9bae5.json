@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "\n        INSERT INTO blog (title, content, related_problem)\n        VALUES (?, ?, ?)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "a621cd02b69dba4f08a5e33669ebf76f57ceccdf88883a8bdffcedd44fd9bae5"
+}

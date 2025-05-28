@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>博客社区</title>
+    <style>
+        body { font-family: Arial; margin: 2em; }
+        #blog-list { margin-top: 1em; }
+        .blog-item { border-bottom: 1px solid #eee; margin-bottom: 1em; padding-bottom: 1em; }
+        .comment { margin-left: 2em; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>📝 博客社区</h1>
+    <div>
+        <input type="text" id="blog-title" placeholder="博客标题">
+        <input type="text" id="blog-problem" placeholder="关联题目(可选)">
+        <br>
+        <textarea id="blog-content" placeholder="写点什么吧..." rows="4" cols="60"></textarea>
+        <br>
+        <button onclick="addBlog()">发布博客</button>
+    </div>
+    <div id="blog-list"></div>
+
+    <script>
+        // 获取评论列表
+        function fetchComments(blogId) {
+            fetch(`/blog/get_comments/${blogId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const commentsDiv = document.getElementById(`comments-${blogId}`);
+                    commentsDiv.innerHTML = '';
+                    if (data.comments && data.comments.length > 0) {
+                        data.comments.forEach(comment => {
+                            const cdiv = document.createElement('div');
+                            cdiv.className = 'comment';
+                            cdiv.textContent = comment.content + (comment.created_at ? ` (${comment.created_at})` : '');
+                            commentsDiv.appendChild(cdiv);
+                        });
+                    } else {
+                        commentsDiv.innerHTML = '<span class="comment">暂无评论。</span>';
+                    }
+                });
+        }
+
+        // 获取博客列表
+        function fetchBlogs() {
+            fetch('/blog/get_blog_list?message=&page=1&per_page=20')
+                .then(res => res.json())
+                .then(data => {
+                    const list = document.getElementById('blog-list');
+                    list.innerHTML = '';
+                    if (data.posts && data.posts.length > 0) {
+                        data.posts.forEach(post => {
+                            const div = document.createElement('div');
+                            div.className = 'blog-item';
+                            div.innerHTML = `<b>${post.title || '无标题'}</b> <span style="color:#888;">(${post.created_at || ''})</span>
+                                <div>${post.content || ''}</div>
+                                <div>关联题目: ${post.related_problem || '无'}</div>
+                                <div>评论数: ${post.comment_count || 0}</div>
+                                <div>
+                                    <input type="text" placeholder="写评论..." id="comment-${post.id}">
+                                    <button onclick="addComment(${post.id})">评论</button>
+                                </div>
+                                <div id="comments-${post.id}"></div>`;
+                            list.appendChild(div);
+                            fetchComments(post.id); // 加载评论
+                        });
+                    } else {
+                        list.innerHTML = '暂无博客。';
+                    }
+                });
+        }
+
+        // 发布博客
+        function addBlog() {
+            const title = document.getElementById('blog-title').value;
+            const content = document.getElementById('blog-content').value;
+            const related_problem = document.getElementById('blog-problem').value;
+            fetch('/blog/add_blog', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, related_problem })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 0) {
+                    alert('发布成功！');
+                    fetchBlogs();
+                    document.getElementById('blog-title').value = '';
+                    document.getElementById('blog-content').value = '';
+                    document.getElementById('blog-problem').value = '';
+                } else {
+                    alert('发布失败: ' + (data.message || '未知错误'));
+                }
+            })
+            .catch(() => alert('网络错误，发布失败'));
+        }
+
+        // 添加评论
+        function addComment(blogId) {
+            const input = document.getElementById(`comment-${blogId}`);
+            const content = input.value;
+            fetch(`/blog/add_comment/${blogId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            })
+            .then(res => res.json())
+            .then(() => {
+                input.value = '';
+                fetchComments(blogId); // 评论后刷新评论区
+            });
+        }
+
+        // 页面加载时获取博客
+        fetchBlogs();
+    </script>
+</body>
+</html>

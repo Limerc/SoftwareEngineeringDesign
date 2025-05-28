@@ -1,0 +1,6 @@
+[default]
+address = "0.0.0.0"
+port = 8000
+
+[default.databases.mysql_database]
+url = "mysql://cooperator:test12345@8.134.162.177/learn_rocket"

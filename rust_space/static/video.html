@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>视频学习</title>
+    <style>
+        body { font-family: Arial; margin: 2em; }
+        #video-list { margin-top: 1em; }
+        .video-item { margin-bottom: 1em; }
+    </style>
+</head>
+<body>
+    <h1>视频学习</h1>
+    <input type="text" id="keyword" placeholder="输入关键字搜索视频">
+    <button onclick="searchVideos()">搜索</button>
+    <div id="video-list"></div>
+
+    <script>
+        function searchVideos() {
+            const keyword = document.getElementById('keyword').value;
+            fetch(`/video/search_videos?keyword=${encodeURIComponent(keyword)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const list = document.getElementById('video-list');
+                    list.innerHTML = '';
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach(video => {
+                            const div = document.createElement('div');
+                            div.className = 'video-item';
+                            div.innerHTML = `<b>${video.title}</b><br>
+                                <a href="${video.url}" target="_blank">${video.url}</a>`;
+                            list.appendChild(div);
+                        });
+                    } else {
+                        list.innerHTML = '没有找到相关视频。';
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

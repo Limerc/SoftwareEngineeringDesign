@@ -1,0 +1,25 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT password FROM users WHERE username = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "password",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 1020
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "fe2a04ef5b3ab8b9de81a583b8d1b56a7415c43b7b7f41aa384a0981b8682c0f"
+}

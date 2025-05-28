@@ -1,0 +1,431 @@
+nohup: ignoring input
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.41s
+     Running `target/debug/rust-playground`
+Configured for debug.
+   >> address: 139.59.103.151
+   >> port: 8000
+   >> workers: 4
+   >> max blocking threads: 512
+   >> ident: Rocket
+   >> IP header: X-Real-IP
+   >> limits: bytes = 8KiB, data-form = 2MiB, file = 1MiB, form = 32KiB, json = 1MiB, msgpack = 1MiB, string = 8KiB
+   >> temp dir: /tmp
+   >> http/2: true
+   >> keep-alive: 5s
+   >> tls: disabled
+   >> shutdown: ctrlc = true, force = true, signals = [SIGTERM], grace = 2s, mercy = 3s
+   >> log level: normal
+   >> cli colors: true
+Routes:
+   >> (index) GET /
+   >> (login) POST /auth/login application/json
+   >> (register) POST /auth/register application/json
+   >> (submit_code) POST /judge/ application/json
+   >> (FileServer: static) GET /static/<path..> [10]
+   >> (get_problems) GET /problems/
+   >> (get_problem_details) GET /problems/<id>
+Fairings:
+   >> 'mysql_database' Database Pool (ignite, shutdown)
+   >> Shield (liftoff, response, singleton)
+Shield:
+   >> X-Frame-Options: SAMEORIGIN
+   >> Permissions-Policy: interest-cohort=()
+   >> X-Content-Type-Options: nosniff
+Rocket has launched from http://139.59.103.151:8000
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/style.css text/css:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico image/avif:
+   >> No matching routes for GET /favicon.ico image/avif.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+POST /auth/register application/json:
+   >> Matched: (register) POST /auth/register application/json
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+POST /auth/login application/json:
+   >> Matched: (login) POST /auth/login application/json
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/6:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/6:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/style.css text/css:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/1:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/8:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /?format=json:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+Warning: Bad incoming HTTP request.
+   >> Error: invalid origin URI: www.shadowserver.org:443.
+   >> Dispatching salvaged request to catcher: CONNECT /.
+   >> No 400 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/favicon.ico text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> I/O Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+   >> Outcome: Forward(404 Not Found)
+   >> No matching routes for GET /static/favicon.ico text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico text/html:
+   >> No matching routes for GET /favicon.ico text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico text/html:
+   >> No matching routes for GET /favicon.ico text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico text/html:
+   >> No matching routes for GET /favicon.ico text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /robots.txt text/html:
+   >> No matching routes for GET /robots.txt text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /sitemap.xml text/html:
+   >> No matching routes for GET /sitemap.xml text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /config.json text/html:
+   >> No matching routes for GET /config.json text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET / text/plain:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico:
+   >> No matching routes for GET /favicon.ico.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /?format=json:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+Warning: Bad incoming HTTP request.
+   >> Error: invalid origin URI: www.shadowserver.org:443.
+   >> Dispatching salvaged request to catcher: CONNECT /.
+   >> No 400 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/style.css text/css:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+GET /favicon.ico image/wxpic:
+   >> No matching routes for GET /favicon.ico image/wxpic.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/4:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/9:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/9:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/10:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/style.css text/css:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico image/avif:
+   >> No matching routes for GET /favicon.ico image/avif.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/style.css text/css:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /static/script.js:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /favicon.ico image/avif:
+   >> No matching routes for GET /favicon.ico image/avif.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /problems:
+   >> Matched: (get_problems) GET /problems/
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /problems/8:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET / text/html:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html text/html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /script.js text/html:
+   >> No matching routes for GET /script.js text/html.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.
+GET /problems/4:
+   >> Matched: (get_problem_details) GET /problems/<id>
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /:
+   >> Matched: (index) GET /
+   >> Outcome: Success(303 See Other)
+   >> Response succeeded.
+GET /static/index.html:
+   >> Matched: (FileServer: static) GET /static/<path..> [10]
+   >> Outcome: Success(200 OK)
+   >> Response succeeded.
+GET /login:
+   >> No matching routes for GET /login.
+   >> No 404 catcher registered. Using Rocket default.
+   >> Response succeeded.

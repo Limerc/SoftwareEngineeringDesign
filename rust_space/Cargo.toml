@@ -1,0 +1,28 @@
+[package]
+name = "rust-playground"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Rocket 框架，用于构建 Web 服务
+rocket = { version = "0.5.0-rc.2", features = ["json"] }
+
+# Rocket 数据库连接池支持
+rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx", "sqlx_mysql"] }
+
+# SQLx 异步数据库库，用于执行 SQL 查询
+sqlx = { version = "0.7.4", features = ["runtime-tokio-native-tls", "mysql","chrono" ] }
+
+# 用于密码哈希和验证
+bcrypt = "0.12"
+
+# 用于生成和验证 JWT（JSON Web Token）
+jsonwebtoken = "8.1"
+
+# Serde 序列化和反序列化库，用于处理 JSON 数据
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 用于处理时间戳字段
+chrono = { version = "0.4", features = ["serde"] }
+tempfile = "3.3"

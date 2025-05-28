@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Playground</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #code-editor {
+            width: 100%;
+            height: 300px; /* 调大代码编辑框的高度 */
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rust Playground</h1>
+
+    <!-- 用户登录和注册 -->
+    <div id="auth-container">
+        <h2>User Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+        <button id="register-btn">Register</button>
+        <p id="auth-message"></p>
+    </div>
+
+    <!-- 新增：视频、博客入口 -->
+    <div style="margin: 20px 0;">
+    <a href="video.html" style="font-size: 18px; color: #007bff; margin-right: 20px;">🎬 视频学习</a>
+    <a href="blog.html" style="font-size: 18px; color: #28a745;">📝 博客社区</a>
+</div>
+
+    <!-- 题目列表 -->
+    <div id="problems-container" style="display: none;">
+        <h2>Problems</h2>
+        <ul id="problems-list"></ul>
+    </div>
+
+    <!-- 题目详情 -->
+    <div id="problem-details-container" style="display: none;">
+        <h2 id="problem-title"></h2>
+        <p id="problem-description"></p>
+        <h3>Examples</h3>
+        <pre id="problem-examples"></pre>
+    </div>
+
+    <!-- 代码编辑器 -->
+    <div id="code-editor-container" style="display: none;">
+        <h2>Code Editor</h2>
+        <textarea id="code-editor">// Write your Rust code here...</textarea>
+        <button id="submit-code" data-problem-id="">Submit Code</button>
+    </div>
+
+   <!-- 判题结果 -->
+    <div id="result-container" style="display: none;">
+        <h2>Result</h2>
+        <div id="result-icon" style="width: 50px; height: 50px; border-radius: 50%; margin: 10px auto;"></div>
+    <pre id="result"></pre>
+    </div>
+    <script>
+        const API_BASE = window.location.origin; // 后端 URL可以自动指向跑后端服务的ip
+
+        // 初始化页面
+        window.addEventListener("DOMContentLoaded", () => {
+            // 加载题目列表
+            fetchProblems();
+
+            // 绑定登录和注册按钮
+            document.getElementById("login-btn").addEventListener("click", loginUser);
+            document.getElementById("register-btn").addEventListener("click", registerUser);
+        });
+
+        // 获取题目列表
+        async function fetchProblems() {
+            try {
+                const response = await fetch(`${API_BASE}/problems`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch problems: ${response.statusText}`);
+                }
+
+                const problems = await response.json();
+                const problemsList = document.getElementById("problems-list");
+                problemsList.innerHTML = "";
+                problems.forEach((problem) => {
+                    const li = document.createElement("li");
+                    li.textContent = problem.title;
+                    li.addEventListener("click", () => fetchProblemDetails(problem.id));
+                    problemsList.appendChild(li);
+                });
+
+                document.getElementById("problems-container").style.display = "block";
+            } catch (error) {
+                console.error(error);
+                alert("Failed to load problems. Please try again later.");
+            }
+        }
+
+        // 获取题目详情
+        async function fetchProblemDetails(problemId) {
+            try {
+                const response = await fetch(`${API_BASE}/problems/${problemId}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch problem details: ${response.statusText}`);
+                }
+
+                const problem = await response.json();
+                document.getElementById("problem-title").textContent = problem.title;
+                document.getElementById("problem-description").textContent = problem.description;
+                document.getElementById("problem-examples").textContent = problem.examples;
+
+                document.getElementById("problem-details-container").style.display = "block";
+                document.getElementById("code-editor-container").style.display = "block";
+                document.getElementById("result-container").style.display = "block";
+                document.getElementById("submit-code").dataset.problemId = problemId;
+            } catch (error) {
+                console.error(error);
+                alert("Failed to load problem details. Please try again later.");
+            }
+        }
+
+        // 提交代码
+        document.getElementById("submit-code").addEventListener("click", async () => {
+    const code = document.getElementById("code-editor").value;
+    const problemId = document.getElementById("submit-code").dataset.problemId;
+    const resultBox = document.getElementById("result");
+    const submitBtn = document.getElementById("submit-code");
+
+    if (!problemId) {
+        alert("Please select a problem first!");
+        return;
+    }
+
+    // 禁用提交按钮，显示加载状态
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Judging...";
+    resultBox.textContent = "Running...";
+
+    try {
+        const response = await fetch(`${API_BASE}/judge`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ problem_id: parseInt(problemId), code }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Result from backend:", result); // 调试日志
+
+        resultBox.textContent = `Output:\n${result.stdout || "No output"}\n\nErrors:\n${result.stderr || "No errors"}`;
+    } catch (error) {
+        console.error("Error submitting code:", error);
+        resultBox.textContent = "Error occurred: " + error.message;
+    } finally {
+        console.log("Restoring button state...");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Code";
+        document.getElementById("result-container").scrollIntoView({ behavior: "smooth" });
+    }
+});
+
+        // 用户登录
+        async function loginUser() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const authMessage = document.getElementById("auth-message");
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                if (response.ok) {
+                    authMessage.textContent = "Login successful!";
+                    authMessage.style.color = "green";
+                } else {
+                    authMessage.textContent = "Login failed!";
+                    authMessage.style.color = "red";
+                }
+            } catch (error) {
+                authMessage.textContent = "Login failed!";
+                authMessage.style.color = "red";
+            }
+        }
+
+        // 用户注册
+        async function registerUser() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const authMessage = document.getElementById("auth-message");
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                if (response.ok) {
+                    authMessage.textContent = "Registration successful!";
+                    authMessage.style.color = "green";
+                } else {
+                    authMessage.textContent = "Registration failed!";
+                    authMessage.style.color = "red";
+                }
+            } catch (error) {
+                authMessage.textContent = "Registration failed!";
+                authMessage.style.color = "red";
+            }
+        }
+    </script>
+    
+    <!-- 引用 script.js -->
+    <script src="script.js"></script>
+</body>
+</html>
