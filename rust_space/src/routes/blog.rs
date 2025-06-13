@@ -1,7 +1,7 @@
-use rocket::serde::json::Json;
-use rocket_db_pools::Connection;
 use crate::db::Db;
 use crate::models::blog::{BlogPost, NewBlogPost, NewComment};
+use rocket::serde::json::Json;
+use rocket_db_pools::Connection;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -27,17 +27,17 @@ pub struct AddCommentResponse {
 }
 
 // 获取博客列表
-#[get("/get_blog_list?<message>&<page>&<per_page>")]
+#[get("/get_blog_list?<problem>&<page>&<per_page>")]
 pub async fn get_blog_list(
     mut db: Connection<Db>,
-    message: Option<&str>,
+    problem: Option<&str>,
     page: Option<u32>,
-    per_page: Option<u32>
+    per_page: Option<u32>,
 ) -> Json<BlogListResponse> {
     let page = page.unwrap_or(1);
     let per_page = per_page.unwrap_or(10);
     let offset = (page - 1) * per_page;
-    let pattern = format!("%{}%", message.unwrap_or(""));
+    let problem = problem.unwrap_or("1");
 
     let posts = sqlx::query_as!(
         BlogPost,
@@ -45,11 +45,13 @@ pub async fn get_blog_list(
         SELECT id, title, content, related_problem, created_at,
             (SELECT COUNT(*) FROM comment WHERE blog_id = blog.id) as comment_count
         FROM blog
-        WHERE title LIKE ? OR content LIKE ?
+        WHERE related_problem = ?
         ORDER BY created_at DESC
         LIMIT ? OFFSET ?
         "#,
-        pattern, pattern, per_page as i64, offset as i64
+        problem,
+        per_page as i64,
+        offset as i64
     )
     .fetch_all(&mut **db)
     .await
@@ -64,10 +66,7 @@ pub async fn get_blog_list(
 
 // 发布博客
 #[post("/add_blog", format = "json", data = "<blog>")]
-pub async fn add_blog(
-    mut db: Connection<Db>,
-    blog: Json<NewBlogPost>
-) -> Json<AddBlogResponse> {
+pub async fn add_blog(mut db: Connection<Db>, blog: Json<NewBlogPost>) -> Json<AddBlogResponse> {
     let res = sqlx::query!(
         r#"
         INSERT INTO blog (title, content, related_problem)
@@ -104,7 +103,7 @@ pub async fn add_blog(
 pub async fn add_comment(
     mut db: Connection<Db>,
     id: i64,
-    comment: Json<NewComment>
+    comment: Json<NewComment>,
 ) -> Json<AddCommentResponse> {
     let res = sqlx::query!(
         r#"
@@ -149,10 +148,7 @@ pub struct CommentListResponse {
 
 // 获取某博客的评论列表
 #[get("/get_comments/<blog_id>")]
-pub async fn get_comments(
-    mut db: Connection<Db>,
-    blog_id: i64
-) -> Json<CommentListResponse> {
+pub async fn get_comments(mut db: Connection<Db>, blog_id: i64) -> Json<CommentListResponse> {
     let comments = sqlx::query_as!(
         Comment,
         r#"
@@ -169,4 +165,3 @@ pub async fn get_comments(
 
     Json(CommentListResponse { comments })
 }
-

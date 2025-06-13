@@ -1,7 +1,7 @@
-use rocket::serde::json::Json;
-use crate::models::video::Video;
-use rocket_db_pools::Connection;
 use crate::db::Db;
+use crate::models::video::Video;
+use rocket::serde::json::Json;
+use rocket_db_pools::Connection;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -14,9 +14,11 @@ pub struct ApiResponse<T> {
 #[get("/search_videos?<keyword>")]
 pub async fn search_videos(
     mut db: Connection<Db>,
-    keyword: Option<&str>
+    keyword: Option<&str>,
 ) -> Json<ApiResponse<Vec<Video>>> {
-    let pattern = keyword.map(|k| format!("%{}%", k)).unwrap_or("%".to_string());
+    let pattern = keyword
+        .map(|k| format!("%{}%", k))
+        .unwrap_or("%".to_string());
 
     let videos = sqlx::query_as!(
         Video,

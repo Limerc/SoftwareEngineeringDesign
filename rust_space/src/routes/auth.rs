@@ -1,7 +1,7 @@
-use rocket::serde::{Deserialize, json::Json};
-use rocket_db_pools::Connection;
+use crate::{db::Db, routes::video::ApiResponse, utils::jwt::generate_token};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use crate::db::Db;
+use rocket::serde::{json::Json, Deserialize};
+use rocket_db_pools::Connection;
 
 #[derive(Deserialize)]
 pub struct RegisterRequest {
@@ -16,7 +16,10 @@ pub struct LoginRequest {
 }
 
 #[post("/register", format = "json", data = "<register_request>")]
-pub async fn register(register_request: Json<RegisterRequest>, mut db: Connection<Db>) -> Result<&'static str, &'static str> {
+pub async fn register(
+    register_request: Json<RegisterRequest>,
+    mut db: Connection<Db>,
+) -> Result<Json<ApiResponse<&'static str>>, &'static str> {
     match hash(&register_request.password, DEFAULT_COST) {
         Ok(hashed_password) => {
             sqlx::query!(
@@ -27,28 +30,41 @@ pub async fn register(register_request: Json<RegisterRequest>, mut db: Connectio
             .execute(&mut **db)
             .await
             .map_err(|_| "Failed to insert user")?;
-            Ok("User registered successfully")
-        },
+            Ok(Json(ApiResponse {
+                code: 0,
+                message: Some("操作成功".to_string()),
+                data: "",
+            }))
+        }
         Err(_) => Err("Failed to hash password"),
     }
 }
 
 #[post("/login", format = "json", data = "<login_request>")]
-pub async fn login(login_request: Json<LoginRequest>, mut db: Connection<Db>) -> Result<&'static str, &'static str> {
+pub async fn login(
+    login_request: Json<LoginRequest>,
+    mut db: Connection<Db>,
+) -> Result<Json<ApiResponse<String>>, &'static str> {
     match sqlx::query!(
-        "SELECT password FROM users WHERE username = ?",
+        "SELECT username, id, password FROM users WHERE username = ?",
         login_request.username
     )
     .fetch_one(&mut **db)
-    .await {
+    .await
+    {
         Ok(user) => {
             // 验证密码是否正确
             if verify(&login_request.password, &user.password).unwrap_or(false) {
-                Ok("Login successful")
+                let token = generate_token(user.username, user.id);
+                Ok(Json(ApiResponse {
+                    code: 0,
+                    message: Some("操作成功".to_string()),
+                    data: token,
+                }))
             } else {
                 Err("Invalid username or password")
             }
-        },
+        }
         Err(_) => Err("User not found"),
     }
 }
