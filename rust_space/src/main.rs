@@ -9,13 +9,6 @@ use db::Db;
 use rocket_db_pools::Database;
 use routes::{auth, blog, judge, problems, video};
 
-use rocket::response::Redirect;
-
-#[get("/")]
-fn index() -> Redirect {
-    Redirect::to(uri!("/static/index.html"))
-}
-
 #[launch]
 fn rocket() -> _ {
     rocket::build()
@@ -36,6 +29,5 @@ fn rocket() -> _ {
             ],
         ) // 博客相关接口
         .mount("/video", routes![video::search_videos]) // 视频相关接口
-        .mount("/static", rocket::fs::FileServer::from("static")) // 提供静态文件服务
-        .mount("/", routes![index]) // 添加根路径路由
+        .mount("/dist", rocket::fs::FileServer::from("dist")) // 提供静态文件服务
 }
